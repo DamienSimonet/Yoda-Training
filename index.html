@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perdus en mer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+:root{
+  --paper:#EFF3F4; --surface:#FFFFFF; --surface-2:#F6F9FA;
+  --ink:#0B2130; --ink-2:#3D5D71; --ink-3:#6E8A9B;
+  --line:#CCD9DF; --line-soft:#E1EAEE;
+  --accent:#C74E1C; --accent-ink:#A03D13; --accent-soft:#FAEDE6;
+  --sea:#136E77; --sea-soft:#E2F0F1; --warn:#B03A2B;
+  --shadow:0 1px 2px rgba(11,33,48,.06), 0 8px 24px -16px rgba(11,33,48,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#08161E; --surface:#0F2632; --surface-2:#13303E;
+    --ink:#E4EDF1; --ink-2:#9DB6C3; --ink-3:#71909F;
+    --line:#25404F; --line-soft:#1B3543;
+    --accent:#EE7B41; --accent-ink:#F5945F; --accent-soft:#33201A;
+    --sea:#57B6BC; --sea-soft:#12333A; --warn:#E0705C;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#08161E; --surface:#0F2632; --surface-2:#13303E;
+  --ink:#E4EDF1; --ink-2:#9DB6C3; --ink-3:#71909F;
+  --line:#25404F; --line-soft:#1B3543;
+  --accent:#EE7B41; --accent-ink:#F5945F; --accent-soft:#33201A;
+  --sea:#57B6BC; --sea-soft:#12333A; --warn:#E0705C;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 28px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none!important}
+.hidden{display:none!important}
+.wrap{max-width:980px;margin:0 auto;padding:24px 18px 72px}
+
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  padding-bottom:13px;border-bottom:2px solid var(--ink);margin-bottom:22px;flex-wrap:wrap}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 4px}
+.masthead h1{font-weight:700;font-size:clamp(24px,5vw,36px);letter-spacing:-.02em;margin:0;line-height:1.05}
+.masthead .coords{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;text-align:right}
+
+h2{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;text-wrap:balance}
+h3{font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0 0 10px}
+p{margin:0 0 12px;max-width:64ch}
+.muted{color:var(--ink-3);font-size:13px}
+.stack{display:flex;flex-direction:column;gap:18px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:20px;box-shadow:var(--shadow)}
+.brief{font-family:Newsreader,Georgia,serif;font-size:16px;line-height:1.65;color:var(--ink-2);
+  border-left:3px solid var(--accent);padding:2px 0 2px 18px}
+.brief p:last-child{margin-bottom:0}
+.brief strong{color:var(--ink);font-weight:500}
+
+button{font-family:inherit;touch-action:manipulation}
+.btn{appearance:none;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  font-size:14px;font-weight:600;padding:11px 20px;border-radius:3px;cursor:pointer;
+  transition:transform .08s ease,opacity .15s ease}
+.btn:hover{opacity:.88}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sea{background:var(--sea);border-color:var(--sea);color:#fff}
+.btn.small{padding:7px 13px;font-size:13px}
+.btn.big{padding:14px 26px;font-size:16px}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+
+label.field{display:block;margin-bottom:14px}
+label.field .lab{display:block;font-size:11px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-2);margin-bottom:5px}
+input[type=text],select{width:100%;font-family:inherit;font-size:16px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:11px 12px}
+input.code{font-variant-numeric:tabular-nums;letter-spacing:.22em;text-transform:uppercase;font-weight:700;font-size:19px}
+.fieldrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 16px}
+
+.sorter{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;touch-action:pan-y}
+.row{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:9px 8px 9px 0;user-select:none}
+.row.drag{border-color:var(--accent);box-shadow:0 10px 22px -12px rgba(11,33,48,.45);background:var(--surface-2)}
+.row .rank{font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;text-align:center;
+  color:var(--ink-3);border-right:1px solid var(--line-soft);padding:2px 0;line-height:1.2}
+.row.top .rank{color:var(--accent)}
+.row .name{font-size:14.5px;line-height:1.35;cursor:grab;touch-action:none}
+.row .ctrl{display:flex;gap:4px}
+.row .ctrl button{width:32px;height:32px;border:1px solid var(--line);background:var(--surface);
+  color:var(--ink-2);border-radius:3px;cursor:pointer;font-size:13px;line-height:1;display:grid;place-items:center;padding:0}
+.row .ctrl button:disabled{opacity:.3;cursor:default}
+.hint{font-size:12.5px;color:var(--ink-3);margin:10px 0 0}
+
+.status{font-size:13.5px;padding:10px 14px;border-radius:3px;border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink-2);margin-bottom:14px}
+.status.ok{border-color:var(--sea);background:var(--sea-soft);color:var(--sea)}
+.status.err{border-color:var(--warn);background:var(--accent-soft);color:var(--warn)}
+.live{font-size:12.5px;color:var(--sea);min-height:1.4em;margin:8px 0 0}
+
+.sent{background:var(--sea-soft);border:1px solid var(--sea);border-radius:4px;padding:24px;text-align:center}
+.sent .big{font-size:21px;font-weight:700;color:var(--sea);margin-bottom:6px}
+.sent .sub{font-size:14px;color:var(--ink-2)}
+
+.people{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 6px;padding:0;list-style:none}
+.chip{border:1px solid var(--line);background:var(--surface-2);border-radius:99px;
+  padding:5px 13px;font-size:13.5px;font-weight:500}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.tile{background:var(--surface);padding:16px}
+.tile .k{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.tile .v{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.1;margin-top:4px}
+.tile.hero{background:var(--sea-soft)}
+.tile.hero .v,.tile.hero .k{color:var(--sea)}
+.tile.miss{background:var(--accent-soft)}
+.tile.miss .v,.tile.miss .k{color:var(--accent-ink)}
+.verdict{margin-top:14px;padding:15px 18px;border-radius:4px;border:1px solid var(--line);
+  background:var(--sea-soft);font-family:Newsreader,Georgia,serif;font-size:16.5px;line-height:1.55;color:var(--ink)}
+.verdict.miss{background:var(--accent-soft)}
+
+.tablewrap{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+th{background:var(--ink);color:var(--paper);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
+td.obj{white-space:normal;min-width:210px}
+tbody tr td{background:var(--surface)}
+tbody tr:nth-child(even) td{background:var(--surface-2)}
+td.off{font-weight:700;color:var(--accent)}
+td.coll{font-weight:700;color:var(--sea)}
+.gap2{color:var(--warn);font-weight:700}
+.gap0{color:var(--ink-3)}
+details{border-top:1px solid var(--line-soft);padding-top:14px;margin-top:18px}
+summary{cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.just{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.just .r{font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);min-width:26px}
+.just .o{font-weight:600;min-width:200px}
+.just .w{color:var(--ink-2);font-size:13.5px;line-height:1.5;max-width:52ch}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Yoda · Culture de l’ouverture</p>
+      <h1>Perdus en mer</h1>
+    </div>
+    <div class="coords" id="whoami">Pacifique Sud</div>
+  </header>
+
+  <div class="status err hidden" id="netstatus"></div>
+
+  <!-- pas de code dans l'adresse -->
+  <section id="s-nocode" class="stack hidden">
+    <div class="panel">
+      <h2>Il manque le code de la session</h2>
+      <p>Cette page s’ouvre en scannant le QR code affiché sur l’écran de la salle. Si vous êtes arrivé ici autrement, saisissez le code à quatre lettres projeté au mur.</p>
+      <label class="field" style="max-width:220px">
+        <span class="lab">Code de session</span>
+        <input type="text" id="nc-code" class="code" maxlength="4" autocomplete="off" placeholder="ABCD">
+      </label>
+      <div class="btnrow" style="margin-top:2px">
+        <button type="button" class="btn accent" id="nc-go">Continuer</button>
+      </div>
+      <div class="status err hidden" id="nc-err"></div>
+    </div>
+  </section>
+
+  <!-- identification -->
+  <section id="s-join" class="stack hidden">
+    <div class="panel">
+      <h2>Bienvenue à bord</h2>
+      <p class="muted">Deux informations, et vous commencez.</p>
+      <div class="fieldrow">
+        <label class="field">
+          <span class="lab">Votre prénom</span>
+          <input type="text" id="j-name" autocomplete="off" placeholder="Sofia">
+        </label>
+        <label class="field">
+          <span class="lab">Votre table</span>
+          <select id="j-team"></select>
+        </label>
+      </div>
+      <div class="btnrow" style="margin-top:2px">
+        <button type="button" class="btn accent big" id="j-go">Commencer</button>
+      </div>
+      <div class="status err hidden" id="j-err"></div>
+    </div>
+  </section>
+
+  <!-- classement individuel -->
+  <section id="s-solo" class="stack hidden">
+    <div class="panel">
+      <h2>Le scénario</h2>
+      <div class="brief">
+        <p>Vous dérivez dans le Pacifique Sud à bord d’un yacht de plaisance. Un incendie a détruit une grande partie du bateau et de sa cargaison. Le navire coule lentement. Les instruments de navigation sont hors d’usage et vous vous estimez à environ <strong>mille milles nautiques de la terre la plus proche</strong>.</p>
+        <p>Il vous reste un canot pneumatique avec des rames, assez grand pour vous transporter tous ainsi que les quinze objets ci-dessous.</p>
+        <p><strong>Classez-les par ordre d’importance pour votre survie.</strong> Le rang 1 est le plus important.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Votre classement</h3>
+      <ol class="sorter" id="sorter-solo"></ol>
+      <p class="hint">Faites glisser une ligne pour la déplacer, ou utilisez les flèches. Travaillez seul et en silence : la discussion vient après.</p>
+      <div class="btnrow">
+        <button type="button" class="btn accent big" id="solo-send">Envoyer mon classement</button>
+        <button type="button" class="btn ghost small" id="solo-reset">Remettre à zéro</button>
+      </div>
+      <div class="status err hidden" id="solo-err"></div>
+    </div>
+  </section>
+
+  <!-- envoyé, attente -->
+  <section id="s-wait" class="stack hidden">
+    <div class="panel">
+      <div class="sent">
+        <div class="big" id="wait-who">C’est envoyé.</div>
+        <div class="sub">Votre prénom vient d’apparaître sur l’écran de la salle. Attendez les autres — cette page s’ouvrira d’elle-même sur le classement de votre table.</div>
+      </div>
+      <div class="btnrow">
+        <button type="button" class="btn ghost small" id="wait-edit">Corriger mon classement</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- classement de la table -->
+  <section id="s-team" class="stack hidden">
+    <div class="panel">
+      <h2>Le classement de votre table</h2>
+      <p class="muted">Un classement unique, sans vote ni moyenne : chaque position doit être argumentée et acceptée. Tout le monde à la table peut déplacer les objets — vos écrans restent synchronisés.</p>
+      <ol class="sorter" id="sorter-team"></ol>
+      <p class="live" id="team-live"></p>
+      <div class="btnrow">
+        <button type="button" class="btn sea big" id="team-done">Notre classement est prêt</button>
+        <button type="button" class="btn ghost small hidden" id="team-undo">Reprendre la discussion</button>
+      </div>
+      <div class="status ok hidden" id="team-ok">Classement transmis. Vous pouvez encore le reprendre tant que l’animateur n’a pas affiché les résultats.</div>
+    </div>
+  </section>
+
+  <!-- résultats de la table -->
+  <section id="s-res" class="stack hidden">
+    <div class="panel">
+      <h2>Votre table</h2>
+      <div class="tiles" id="res-tiles"></div>
+      <div class="verdict" id="res-verdict"></div>
+      <p class="hint">Le détail objet par objet et la comparaison entre les tables sont sur l’écran de la salle.</p>
+    </div>
+  </section>
+
+</div>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script>
+/* ===== Perdus en mer — socle commun aux trois pages ===== */
+var PEM = (function(){
+  "use strict";
+
+  var CFG = {
+    apiKey: "AIzaSyAfBRgmH-Nt7uhiZKmWVKi7B18_hkzJP74",
+    authDomain: "yoda-perdus-en-mer.firebaseapp.com",
+    projectId: "yoda-perdus-en-mer",
+    storageBucket: "yoda-perdus-en-mer.firebasestorage.app",
+    messagingSenderId: "881660998060",
+    appId: "1:881660998060:web:a3a81684998fb0684cca09"
+  };
+
+  // L'ordre A→O est volontairement différent du classement officiel :
+  // la liste de départ ne doit jamais être la bonne réponse.
+  var ITEMS = [
+    {id:"A", n:"Un sextant", off:15, w:"Inutilisable sans tables de navigation ni chronomètre. L’objet le plus technique du lot est le plus inutile."},
+    {id:"B", n:"Un bidon de 25 litres d’eau", off:3, w:"Indispensable pour compenser la déshydratation, mais l’eau ne fait que prolonger l’attente : elle ne provoque pas le sauvetage."},
+    {id:"C", n:"Un miroir de rasage", off:1, w:"De très loin l’objet le plus important : le seul moyen de signalisation visible à plusieurs kilomètres. Un reflet solaire est repérable par un avion de recherche."},
+    {id:"D", n:"Une moustiquaire", off:14, w:"Il n’y a pas de moustiques au milieu du Pacifique."},
+    {id:"E", n:"Une caisse de rations militaires", off:4, w:"Apport alimentaire de base. Utile, non déterminant."},
+    {id:"F", n:"Des cartes marines du Pacifique", off:13, w:"Sans moyen de propulsion ni de navigation, savoir où l’on est ne change rien."},
+    {id:"G", n:"Un coussin flottant", off:9, w:"Bouée de secours si quelqu’un passe par-dessus bord."},
+    {id:"H", n:"Un bidon de 10 litres de mélange huile / essence", off:2, w:"Se répand et flotte à la surface : enflammé au bon moment, il constitue le second signal de détresse. Inutile pour le moteur, décisif pour être vu."},
+    {id:"I", n:"Un nécessaire de pêche", off:7, w:"Classé plus bas qu’attendu : rien ne garantit que le poisson morde. Un « peut-être » ne vaut pas une ration certaine."},
+    {id:"J", n:"Deux mètres carrés de bâche plastique opaque", off:5, w:"Collecte de l’eau de pluie et protection contre les éléments."},
+    {id:"K", n:"Une petite radio à transistors", off:12, w:"Hors de portée de toute émission à cette distance des côtes : réception seule, aucune émission possible."},
+    {id:"L", n:"Un bidon de répulsif à requins", off:10, w:"Rassure beaucoup, sert rarement. La peur lui donne un rang très supérieur à son utilité réelle."},
+    {id:"M", n:"Cinq mètres de corde en nylon", off:8, w:"Permet d’arrimer le matériel et de sécuriser les personnes."},
+    {id:"N", n:"Un litre de rhum à 80°", off:11, w:"Utilisable comme antiseptique. Ingéré, il accélère la déshydratation : dangereux."},
+    {id:"O", n:"Deux boîtes de barres chocolatées", off:6, w:"Réserve d’énergie immédiate."}
+  ];
+  var BY_ID = {}; ITEMS.forEach(function(it){ BY_ID[it.id] = it; });
+  var IDS = ITEMS.map(function(it){ return it.id; });
+
+  function decode(str){
+    var s = (str||"").toUpperCase().replace(/[^A-O]/g,"");
+    if (s.length !== 15) return null;
+    var seen = {}, out = [];
+    for (var i=0;i<15;i++){
+      var c = s.charAt(i);
+      if (seen[c] || !BY_ID[c]) return null;
+      seen[c] = 1; out.push(c);
+    }
+    return out;
+  }
+  function scoreOf(order){
+    var t = 0;
+    for (var i=0;i<order.length;i++) t += Math.abs(BY_ID[order[i]].off - (i+1));
+    return t;
+  }
+  function fmt(x){ return (Math.round(x*10)/10).toString().replace(".", ","); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function save(k,v){ try{ localStorage.setItem("pem3_"+k, JSON.stringify(v)); }catch(e){} }
+  function load(k,d){ try{ var r=localStorage.getItem("pem3_"+k); return r?JSON.parse(r):d; }catch(e){ return d; } }
+  function qs(name){ try{ return (new URLSearchParams(location.search)).get(name); }catch(e){ return null; } }
+  function baseUrl(){ return location.origin + location.pathname.replace(/[^/]*$/, ""); }
+
+  /* ---------- liste ordonnable ---------- */
+  function Sorter(el, opts){
+    opts = opts || {};
+    var self = this;
+    this.el = el; this.dragId = null; this.order = IDS.slice();
+    this.readonly = false;
+    this.onChange = opts.onChange || function(){};
+
+    this.render = function(){
+      el.innerHTML = "";
+      self.order.forEach(function(id, i){
+        var it = BY_ID[id];
+        var li = document.createElement("li");
+        li.className = "row" + (i < 3 ? " top" : "") + (self.dragId === id ? " drag" : "");
+        li.dataset.id = id;
+        var r = document.createElement("div"); r.className = "rank"; r.textContent = String(i+1);
+        var n = document.createElement("div"); n.className = "name"; n.textContent = it.n;
+        li.appendChild(r); li.appendChild(n);
+        if (!self.readonly){
+          var c = document.createElement("div"); c.className = "ctrl";
+          var up = document.createElement("button");
+          up.type = "button"; up.innerHTML = "&#9650;"; up.disabled = (i === 0);
+          up.setAttribute("aria-label", "Monter " + it.n);
+          up.addEventListener("click", function(){ self.move(i, i-1); });
+          var dn = document.createElement("button");
+          dn.type = "button"; dn.innerHTML = "&#9660;"; dn.disabled = (i === self.order.length-1);
+          dn.setAttribute("aria-label", "Descendre " + it.n);
+          dn.addEventListener("click", function(){ self.move(i, i+1); });
+          c.appendChild(up); c.appendChild(dn);
+          li.appendChild(c);
+        } else {
+          n.style.cursor = "default";
+        }
+        el.appendChild(li);
+      });
+    };
+    this.move = function(from, to){
+      if (self.readonly) return;
+      if (to < 0 || to >= self.order.length) return;
+      var x = self.order.splice(from,1)[0];
+      self.order.splice(to,0,x);
+      self.render();
+      self.onChange(self.order);
+    };
+    // set() ne touche pas à la liste pendant un glisser en cours
+    this.set = function(arr, force){
+      if (self.dragId && !force) return;
+      if (arr.join("") === self.order.join("")) return;
+      self.order = arr.slice(); self.render();
+    };
+    this.reset = function(){ self.order = IDS.slice(); self.render(); self.onChange(self.order); };
+    this.lock = function(v){ self.readonly = !!v; self.render(); };
+
+    el.addEventListener("pointerdown", function(ev){
+      if (self.readonly) return;
+      var h = ev.target.closest ? ev.target.closest(".name") : null;
+      if (!h) return;
+      var li = h.closest(".row"); if (!li) return;
+      ev.preventDefault();
+      self.dragId = li.dataset.id;
+      try{ el.setPointerCapture(ev.pointerId); }catch(e){}
+      self.render();
+    });
+    el.addEventListener("pointermove", function(ev){
+      if (!self.dragId) return;
+      ev.preventDefault();
+      var rows = Array.prototype.slice.call(el.children);
+      var cur = self.order.indexOf(self.dragId), target = cur;
+      for (var i=0;i<rows.length;i++){
+        var b = rows[i].getBoundingClientRect();
+        if (ev.clientY < b.top + b.height/2){ target = i; break; }
+        target = i;
+      }
+      if (target !== cur) self.move(cur, target);
+    });
+    function end(ev){
+      if (!self.dragId) return;
+      self.dragId = null;
+      try{ el.releasePointerCapture(ev.pointerId); }catch(e){}
+      self.render();
+    }
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+    this.render();
+  }
+
+  /* ---------- Firestore ---------- */
+  var db = null, dbError = "";
+  function initDb(){
+    if (db) return db;
+    if (typeof firebase === "undefined" || !firebase.initializeApp){
+      dbError = "La bibliothèque Firebase n’a pas pu être chargée. Vérifiez la connexion réseau puis rechargez la page.";
+      return null;
+    }
+    try{
+      if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(CFG);
+      db = firebase.firestore();
+      return db;
+    }catch(e){
+      dbError = "Connexion à la base impossible : " + (e && e.message ? e.message : e);
+      return null;
+    }
+  }
+  function sessionDoc(code){ return db.collection("sessions").doc(code); }
+  function entriesCol(code){ return sessionDoc(code).collection("entries"); }
+  function teamsCol(code){ return sessionDoc(code).collection("teams"); }
+
+  /* ---------- calculs ---------- */
+  function computeTeam(entries, teamDoc, team){
+    var list = entries.filter(function(e){ return String(e.team) === String(team); })
+      .map(function(e){ var o = decode(e.order);
+        return o ? { name:e.name, order:o, score:scoreOf(o), id:e._id } : null; })
+      .filter(Boolean)
+      .sort(function(a,b){ return a.name.localeCompare(b.name, "fr"); });
+    var t = teamDoc || {};
+    var coll = t.collective ? decode(t.collective) : null;
+    var r = { team:String(team), list:list, done: !!t.done, coll:coll,
+              avg:null, best:null, bestName:"", gScore:null, gain:null };
+    if (list.length){
+      var sum=0, best=Infinity, bn="";
+      list.forEach(function(v){ sum+=v.score; if (v.score<best){ best=v.score; bn=v.name; } });
+      r.avg = sum/list.length; r.best = best; r.bestName = bn;
+    }
+    if (coll) r.gScore = scoreOf(coll);
+    if (r.avg !== null && r.gScore !== null) r.gain = r.avg - r.gScore;
+    return r;
+  }
+
+  function verdictText(r){
+    if (r.gScore === null) return "";
+    if (r.avg === null) return "Aucun classement individuel n’a été reçu pour cette table : le score est calculé, mais la comparaison qui fait la valeur de l’exercice n’est pas possible.";
+    if (r.gScore < r.best) return "La table fait mieux que sa moyenne (" + fmt(r.avg) + " → " + r.gScore + ") et mieux que son meilleur membre (" + r.bestName + ", " + r.best + "). Le classement de la table n’appartient à personne : il a été produit par la discussion.";
+    if (r.gScore < r.avg) return "La table fait mieux que sa moyenne (" + fmt(r.avg) + " → " + r.gScore + "), mais elle ne bat pas son meilleur membre (" + r.bestName + ", " + r.best + "). Question à poser : à quel moment cette personne a-t-elle renoncé à défendre son point de vue ?";
+    return "La table fait moins bien que la moyenne de ses membres (" + fmt(r.avg) + " → " + r.gScore + "). C’est rare, et c’est le meilleur cas d’étude de la journée : la discussion a détruit de l’information au lieu d’en produire.";
+  }
+
+  function detailTable(r){
+    if (!r.coll) return "";
+    var html = '<table><thead><tr><th class="obj">Objet</th><th class="num">Officiel</th>';
+    r.list.forEach(function(p){ html += '<th class="num">' + esc(p.name) + "</th>"; });
+    html += '<th class="num">La table</th><th class="num">Écart</th></tr></thead><tbody>';
+    ITEMS.slice().sort(function(a,b){ return a.off - b.off; }).forEach(function(it){
+      var gi = r.coll.indexOf(it.id) + 1, gap = Math.abs(gi - it.off);
+      html += '<tr><td class="obj">' + esc(it.n) + '</td><td class="num off">' + it.off + "</td>";
+      r.list.forEach(function(p){ html += '<td class="num">' + (p.order.indexOf(it.id)+1) + "</td>"; });
+      html += '<td class="num coll">' + gi + '</td><td class="num ' + (gap===0?"gap0":(gap<=2?"":"gap2")) + '">' + gap + "</td></tr>";
+    });
+    html += '<tr><td class="obj"><strong>Score total</strong></td><td class="num">—</td>';
+    r.list.forEach(function(p){ html += '<td class="num"><strong>' + p.score + "</strong></td>"; });
+    html += '<td class="num coll"><strong>' + r.gScore + '</strong></td><td class="num">—</td></tr></tbody></table>';
+    return html;
+  }
+
+  function justifsHtml(){
+    var h = "";
+    ITEMS.slice().sort(function(a,b){ return a.off - b.off; }).forEach(function(it){
+      h += '<div class="just"><div class="r">' + it.off + '</div><div class="o">' + esc(it.n) +
+           '</div><div class="w">' + esc(it.w) + "</div></div>";
+    });
+    return h;
+  }
+
+  function drawQR(el, payload, cell){
+    if (!el) return;
+    if (typeof window.qrcode !== "function"){ el.innerHTML = ""; return; }
+    try{
+      var q = window.qrcode(0, "M");
+      q.addData(payload); q.make();
+      el.innerHTML = q.createSvgTag({cellSize: cell || 4, margin: 2, scalable: true});
+    }catch(e){ el.innerHTML = ""; }
+  }
+
+  function ready(fn){
+    function go(){ try{ fn(); }catch(err){ fail((err && err.message) || String(err)); } }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go, false);
+    else go();
+  }
+  function fail(msg){
+    try{
+      var d = document.createElement("div");
+      d.setAttribute("style","position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#A62B2B;color:#fff;font:13px/1.45 -apple-system,system-ui,sans-serif;padding:12px 16px");
+      d.textContent = "Un problème technique empêche la page de fonctionner : " + msg;
+      (document.body || document.documentElement).appendChild(d);
+    }catch(e){}
+  }
+  window.addEventListener("error", function(e){ fail((e && e.message) || "erreur inconnue"); });
+
+  return {
+    ITEMS:ITEMS, BY_ID:BY_ID, IDS:IDS,
+    decode:decode, scoreOf:scoreOf, fmt:fmt, esc:esc,
+    save:save, load:load, qs:qs, baseUrl:baseUrl,
+    Sorter:Sorter,
+    initDb:initDb, get db(){ return db; }, get dbError(){ return dbError; },
+    sessionDoc:sessionDoc, entriesCol:entriesCol, teamsCol:teamsCol,
+    computeTeam:computeTeam, verdictText:verdictText, detailTable:detailTable,
+    justifsHtml:justifsHtml, drawQR:drawQR, ready:ready
+  };
+})();
+
+</script>
+<script>
+PEM.ready(function(){
+  "use strict";
+
+  var st = {
+    code: (PEM.qs("s") || "").toUpperCase().replace(/[^A-Z]/g,"").slice(0,4),
+    nteams: 4, phase: "individuel",
+    name: "", team: "", entryId: "",
+    teamDoc: {}, entries: [], sent: false,
+    unsubTeam: null, writeTimer: null, lastBy: ""
+  };
+
+  var el = {};
+  ["s-nocode","s-join","s-solo","s-wait","s-team","s-res"].forEach(function(id){
+    el[id] = document.getElementById(id);
+  });
+  function show(id){
+    Object.keys(el).forEach(function(k){ el[k].classList.toggle("hidden", k !== id); });
+    window.scrollTo(0,0);
+  }
+  function err(id, msg){
+    var e = document.getElementById(id);
+    if (!msg){ e.classList.add("hidden"); return; }
+    e.textContent = msg; e.classList.remove("hidden");
+  }
+  function net(msg){
+    var e = document.getElementById("netstatus");
+    if (!msg){ e.classList.add("hidden"); return; }
+    e.textContent = msg; e.classList.remove("hidden");
+  }
+
+  var solo = new PEM.Sorter(document.getElementById("sorter-solo"));
+  var team = new PEM.Sorter(document.getElementById("sorter-team"), { onChange: pushTeam });
+
+  /* ---------- entrée ---------- */
+  if (!st.code){
+    show("s-nocode");
+    document.getElementById("nc-go").addEventListener("click", function(){
+      var c = (document.getElementById("nc-code").value||"").toUpperCase().replace(/[^A-Z]/g,"").slice(0,4);
+      if (c.length !== 4){ err("nc-err","Le code comporte quatre lettres."); return; }
+      location.search = "?s=" + c;
+    });
+    return;
+  }
+  if (!PEM.initDb()){ show("s-nocode"); err("nc-err", PEM.dbError); return; }
+
+  PEM.sessionDoc(st.code).get().then(function(snap){
+    if (!snap.exists){ show("s-nocode"); err("nc-err","Aucune session ne porte le code " + st.code + ". Vérifiez l’écran de la salle."); return; }
+    var d = snap.data() || {};
+    st.nteams = d.nteams || 4;
+    fillTeams();
+    var prev = PEM.load("me_" + st.code, null);
+    if (prev && prev.name){
+      document.getElementById("j-name").value = prev.name;
+      if (prev.team) document.getElementById("j-team").value = prev.team;
+    } else {
+      document.getElementById("j-name").value = PEM.load("name","") || "";
+    }
+    show("s-join");
+    watchSession();
+  }).catch(function(e){
+    show("s-nocode");
+    err("nc-err","Impossible de joindre la base : " + (e && e.message ? e.message : e));
+  });
+
+  function fillTeams(){
+    var sel = document.getElementById("j-team");
+    sel.innerHTML = "";
+    for (var i=1;i<=st.nteams;i++){
+      var o = document.createElement("option");
+      o.value = String(i); o.textContent = "Table " + i;
+      sel.appendChild(o);
+    }
+  }
+
+  /* ---------- suivi de la session ---------- */
+  function watchSession(){
+    PEM.sessionDoc(st.code).onSnapshot(function(snap){
+      var d = snap.data() || {};
+      st.nteams = d.nteams || st.nteams;
+      var ph = d.phase || "individuel";
+      if (ph !== st.phase){ st.phase = ph; route(); }
+    }, function(e){ net("Liaison interrompue : " + (e && e.message ? e.message : e)); });
+
+    PEM.entriesCol(st.code).onSnapshot(function(snap){
+      var arr = []; snap.forEach(function(d){ var v = d.data(); v._id = d.id; arr.push(v); });
+      st.entries = arr;
+      if (st.phase === "resultats") renderRes();
+    }, function(){});
+  }
+
+  function watchTeam(){
+    if (st.unsubTeam || !st.team) return;
+    st.unsubTeam = PEM.teamsCol(st.code).doc(st.team).onSnapshot(function(snap){
+      var d = snap.data() || {};
+      st.teamDoc = d;
+      var o = d.collective ? PEM.decode(d.collective) : null;
+      if (o) team.set(o);
+      var mine = (d.by || "") === st.name;
+      if (d.by && !mine && d.by !== st.lastBy){
+        st.lastBy = d.by;
+        var live = document.getElementById("team-live");
+        live.textContent = d.by + " vient de modifier le classement.";
+        setTimeout(function(){ if (live.textContent.indexOf(d.by) === 0) live.textContent = ""; }, 2500);
+      }
+      renderTeamButtons();
+      if (st.phase === "resultats") renderRes();
+    }, function(){});
+  }
+
+  function route(){
+    if (!st.name){ show("s-join"); return; }
+    if (st.phase === "individuel"){ show(st.sent ? "s-wait" : "s-solo"); return; }
+    if (st.phase === "equipe"){ watchTeam(); show("s-team"); return; }
+    if (st.phase === "resultats"){ watchTeam(); renderRes(); show("s-res"); return; }
+  }
+
+  /* ---------- identification ---------- */
+  document.getElementById("j-go").addEventListener("click", function(){
+    err("j-err","");
+    var name = (document.getElementById("j-name").value||"").trim();
+    if (!name){ err("j-err","Indiquez votre prénom : c’est lui qui s’affichera sur l’écran de la salle."); return; }
+    if (name.length > 40) name = name.slice(0,40);
+    st.name = name;
+    st.team = document.getElementById("j-team").value || "1";
+    document.getElementById("whoami").textContent = st.name + " · Table " + st.team;
+    PEM.save("name", name);
+    var prev = PEM.load("me_" + st.code, null);
+    st.entryId = (prev && prev.name === name && prev.team === st.team) ? prev.id : "";
+    st.sent = !!st.entryId;
+    PEM.save("me_" + st.code, { id: st.entryId, name: st.name, team: st.team });
+    route();
+  });
+
+  /* ---------- envoi individuel ---------- */
+  document.getElementById("solo-reset").addEventListener("click", function(){ solo.reset(); });
+  document.getElementById("wait-edit").addEventListener("click", function(){ show("s-solo"); });
+
+  document.getElementById("solo-send").addEventListener("click", function(){
+    err("solo-err","");
+    var btn = this; btn.disabled = true;
+    var ref = st.entryId ? PEM.entriesCol(st.code).doc(st.entryId) : PEM.entriesCol(st.code).doc();
+    ref.set({
+      team: st.team, name: st.name,
+      order: solo.order.join(""), score: PEM.scoreOf(solo.order), ts: Date.now()
+    }).then(function(){
+      st.entryId = ref.id; st.sent = true;
+      PEM.save("me_" + st.code, { id: st.entryId, name: st.name, team: st.team });
+      document.getElementById("wait-who").textContent = st.name + ", c’est envoyé.";
+      btn.disabled = false;
+      route();
+    }).catch(function(e){
+      btn.disabled = false;
+      err("solo-err","L’envoi a échoué : " + (e && e.message ? e.message : e) + ". Réessayez.");
+    });
+  });
+
+  /* ---------- classement de table, édition partagée ---------- */
+  function pushTeam(order){
+    if (st.writeTimer) clearTimeout(st.writeTimer);
+    st.writeTimer = setTimeout(function(){
+      PEM.teamsCol(st.code).doc(st.team).set({
+        collective: order.join(""),
+        done: !!st.teamDoc.done,
+        by: st.name,
+        updatedAt: Date.now()
+      }).catch(function(e){ net("Enregistrement impossible : " + (e && e.message ? e.message : e)); });
+    }, 400);
+  }
+
+  function setDone(v){
+    PEM.teamsCol(st.code).doc(st.team).set({
+      collective: team.order.join(""),
+      done: v, by: st.name, updatedAt: Date.now()
+    }).catch(function(e){ net("Enregistrement impossible : " + (e && e.message ? e.message : e)); });
+  }
+  document.getElementById("team-done").addEventListener("click", function(){ setDone(true); });
+  document.getElementById("team-undo").addEventListener("click", function(){ setDone(false); });
+
+  function renderTeamButtons(){
+    var done = !!st.teamDoc.done;
+    document.getElementById("team-done").classList.toggle("hidden", done);
+    document.getElementById("team-undo").classList.toggle("hidden", !done);
+    document.getElementById("team-ok").classList.toggle("hidden", !done);
+  }
+
+  /* ---------- résultats de la table ---------- */
+  function renderRes(){
+    var r = PEM.computeTeam(st.entries, st.teamDoc, st.team);
+    var tiles = document.getElementById("res-tiles");
+    tiles.innerHTML = "";
+    function tile(k,v,mod){
+      var d = document.createElement("div");
+      d.className = "tile" + (mod ? " " + mod : "");
+      d.innerHTML = '<div class="k"></div><div class="v"></div>';
+      d.querySelector(".k").textContent = k;
+      d.querySelector(".v").textContent = v;
+      tiles.appendChild(d);
+    }
+    if (r.avg !== null){ tile("Moyenne des individus", PEM.fmt(r.avg)); tile("Meilleur individu", String(r.best)); }
+    tile("Votre table", r.gScore === null ? "—" : String(r.gScore),
+         (r.avg !== null && r.gScore !== null && r.gScore >= r.avg) ? "miss" : "hero");
+    var v = document.getElementById("res-verdict");
+    v.className = "verdict" + ((r.avg !== null && r.gScore !== null && r.gScore >= r.avg) ? " miss" : "");
+    v.textContent = r.gScore === null
+      ? "Votre table n’a pas transmis de classement collectif."
+      : PEM.verdictText(r);
+  }
+});
+
+</script>
+</body>
+</html>
